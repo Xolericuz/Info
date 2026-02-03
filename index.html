@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>XOLERIC ➜▮INFO</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<style>
+/* ASOSIY STIL */
+:root {
+    --matrix-green: #00FF00;
+    --matrix-green-dark: #0a0;
+    --matrix-green-light: #0f0;
+    --matrix-cyan: #0ff;
+    --matrix-yellow: #ff0;
+    --matrix-blue: #00a2ff;
+    --matrix-purple: #9d00ff;
+    --matrix-red: #ff003c;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000 url('https://i.ibb.co/CKszGkkW/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--matrix-green);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* LOADING EKRANI */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 1s ease;
+    background: linear-gradient(135deg, #000 0%, #001a00 100%);
+}
+
+.loading-screen.fade-out {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 30px;
+}
+
+.loader {
+    width: 100%;
+    height: 100%;
+    border: 3px solid transparent;
+    border-top: 3px solid var(--matrix-green);
+    border-right: 3px solid var(--matrix-green);
+    border-radius: 50%;
+    animation: spin 2s linear infinite;
+    box-shadow: 0 0 20px var(--matrix-green);
+}
+
+.inner-loader {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 90px;
+    height: 90px;
+    border: 2px solid transparent;
+    border-bottom: 2px solid var(--matrix-cyan);
+    border-left: 2px solid var(--matrix-cyan);
+    border-radius: 50%;
+    animation: spinReverse 1.5s linear infinite;
+}
+
+.loading-text {
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    color: var(--matrix-green);
+    text-shadow: 0 0 15px var(--matrix-green);
+    margin-top: 20px;
+    position: relative;
+}
+
+.loading-dots {
+    display: inline-block;
+    width: 20px;
+    text-align: left;
+}
+
+.loading-progress {
+    width: 200px;
+    height: 4px;
+    background: rgba(0, 255, 0, 0.1);
+    margin-top: 20px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--matrix-green-dark), var(--matrix-green));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(-360deg); }
+}
+
+/* KANVASLAR ORQA FON */
+.matrix-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#matrix1 {
+    opacity: 0.6;
+}
+
+#matrix2 {
+    opacity: 0.4;
+}
+
+#matrix3 {
+    opacity: 0.2;
+    z-index: 2;
+}
+
+/* RAIN EFFECT - FON ORQASIDA */
+.rain-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.rain-line {
+    position: absolute;
+    top: -100px;
+    width: 1px;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, var(--matrix-green), var(--matrix-cyan), transparent);
+    opacity: 0;
+    filter: blur(1px);
+}
+
+/* GLASS EFFECT KONTEYNER */
+.glass-container {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    padding: 15px;
+    box-sizing: border-box;
+    backdrop-filter: blur(5px);
+}
+
+.glass-terminal {
+    background: rgba(5, 15, 5, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    border-radius: 16px;
+    box-shadow: 
+        0 0 50px rgba(0, 255, 0, 0.15),
+        inset 0 0 40px rgba(0, 255, 0, 0.05),
+        0 0 0 1px rgba(0, 255, 0, 0.1);
+    max-width: 1000px;
+    width: 100%;
+    height: 88vh;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(0);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-terminal.active {
+    box-shadow: 
+        0 0 70px rgba(0, 255, 0, 0.25),
+        inset 0 0 50px rgba(0, 255, 0, 0.08),
+        0 0 0 1px rgba(0, 255, 0, 0.2);
+}
+
+/* TERMINAL HEADER */
+.terminal-header {
+    padding: 18px 25px;
+    background: rgba(5, 10, 5, 0.8);
+    border-bottom: 1px solid rgba(0, 255, 0, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.terminal-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--matrix-green), transparent);
+    animation: scanLine 3s linear infinite;
+}
+
+.terminal-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--matrix-green);
+    text-shadow: 0 0 8px var(--matrix-green);
+    letter-spacing: 1.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.terminal-title i {
+    color: var(--matrix-cyan);
+    animation: pulseIcon 2s infinite;
+}
+
+.terminal-controls {
+    display: flex;
+    gap: 12px;
+}
+
+.control-btn {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.control-btn:hover {
+    transform: scale(1.1);
+}
+
+.control-btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+}
+
+.control-btn:active::after {
+    width: 20px;
+    height: 20px;
+}
+
+.close-btn { 
+    background: #ff5f56;
+    box-shadow: 0 0 5px #ff5f56;
+}
+
+.minimize-btn { 
+    background: #ffbd2e;
+    box-shadow: 0 0 5px #ffbd2e;
+}
+
+.maximize-btn { 
+    background: #27ca3f;
+    box-shadow: 0 0 5px #27ca3f;
+}
+
+/* TERMINAL KONTENT */
+.terminal-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--matrix-green) rgba(0, 20, 0, 0.5);
+    position: relative;
+}
+
+.terminal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(to bottom, rgba(5, 15, 5, 0.9), transparent);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.terminal-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: linear-gradient(to top, rgba(5, 15, 5, 0.9), transparent);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.terminal-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+.terminal-content::-webkit-scrollbar-track {
+    background: rgba(0, 20, 0, 0.3);
+    border-radius: 5px;
+}
+
+.terminal-content::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, var(--matrix-green-dark), var(--matrix-green));
+    border-radius: 5px;
+    border: 2px solid rgba(0, 20, 0, 0.3);
+}
+
+.line {
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.7;
+    margin-bottom: 12px;
+    opacity: 0;
+    font-size: 1.05rem;
+    text-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+    position: relative;
+    padding-left: 5px;
+    transition: opacity 0.3s ease;
+}
+
+.line::before {
+    content: '>';
+    position: absolute;
+    left: -15px;
+    color: var(--matrix-yellow);
+    opacity: 0.7;
+}
+
+.highlight {
+    color: var(--matrix-cyan);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--matrix-cyan);
+    animation: textGlow 2s infinite alternate;
+}
+
+.command {
+    color: var(--matrix-yellow);
+    font-weight: bold;
+}
+
+.important {
+    color: var(--matrix-purple);
+    animation: pulse 1.5s infinite;
+}
+
+.rainbow-text {
+    background: linear-gradient(90deg, #ff0000, #ff9900, #ffff00, #00ff00, #00ffff, #0000ff, #9900ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: bold;
+}
+
+/* KURSOR EFEKTI */
+.cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.4rem;
+    background: var(--matrix-green);
+    vertical-align: middle;
+    margin-left: 3px;
+    animation: blink 0.8s step-end infinite, cursorGlow 1.5s infinite alternate;
+    box-shadow: 0 0 10px var(--matrix-green);
+    position: relative;
+}
+
+.cursor::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: cursorShine 2s infinite;
+}
+
+/* FOOTER */
+.terminal-footer {
+    padding: 15px 25px;
+    background: rgba(5, 10, 5, 0.8);
+    border-top: 1px solid rgba(0, 255, 0, 0.25);
+    font-size: 0.85rem;
+    color: var(--matrix-green-dark);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.terminal-footer::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--matrix-green), transparent);
+    animation: scanLine 4s linear infinite 1s;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--matrix-green);
+    box-shadow: 0 0 10px var(--matrix-green);
+    animation: pulse 2s infinite, statusGlow 3s infinite alternate;
+}
+
+.system-info {
+    display: flex;
+    gap: 20px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.info-item i {
+    color: var(--matrix-cyan);
+}
+
+/* MOBILE CONTROLS */
+.mobile-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 20;
+}
+
+.mobile-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(0, 255, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(0, 255, 0, 0.3);
+    color: var(--matrix-green);
+    font-size: 1.2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+.mobile-btn:active {
+    transform: scale(0.9);
+    background: rgba(0, 255, 0, 0.3);
+}
+
+.command-input {
+    position: fixed;
+    bottom: 90px;
+    left: 20px;
+    right: 20px;
+    background: rgba(0, 20, 0, 0.8);
+    border: 1px solid var(--matrix-green);
+    border-radius: 10px;
+    padding: 15px;
+    z-index: 20;
+    display: none;
+    backdrop-filter: blur(10px);
+}
+
+.command-input input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--matrix-green);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    outline: none;
+    padding: 5px;
+}
+
+/* ANIMATSIYALAR */
+@keyframes blink { 
+    0%, 100% { opacity: 1; } 
+    50% { opacity: 0.3; } 
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+@keyframes pulseIcon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes scanLine {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+@keyframes rainFall {
+    0% { 
+        transform: translateY(-100px); 
+        opacity: 0; 
+    }
+    10% { 
+        opacity: 0.8; 
+    }
+    90% { 
+        opacity: 0.8; 
+    }
+    100% { 
+        transform: translateY(calc(100vh + 100px)); 
+        opacity: 0; 
+    }
+}
+
+@keyframes textGlow {
+    0% { text-shadow: 0 0 5px var(--matrix-cyan); }
+    100% { text-shadow: 0 0 15px var(--matrix-cyan), 0 0 25px var(--matrix-cyan); }
+}
+
+@keyframes cursorGlow {
+    0% { box-shadow: 0 0 5px var(--matrix-green); }
+    100% { box-shadow: 0 0 15px var(--matrix-green), 0 0 25px var(--matrix-green); }
+}
+
+@keyframes cursorShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes statusGlow {
+    0% { box-shadow: 0 0 5px var(--matrix-green); }
+    100% { box-shadow: 0 0 15px var(--matrix-green), 0 0 25px var(--matrix-green); }
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* MOBIL RESPONSIVE */
+@media (max-width: 768px) {
+    .glass-container {
+        padding: 10px;
+    }
+    
+    .glass-terminal {
+        height: 92vh;
+        border-radius: 12px;
+    }
+    
+    .terminal-header {
+        padding: 15px 20px;
+    }
+    
+    .terminal-title {
+        font-size: 1.1rem;
+    }
+    
+    .terminal-content {
+        padding: 20px 15px;
+    }
+    
+    .line {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+    
+    .terminal-footer {
+        padding: 12px 15px;
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .system-info {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .mobile-controls {
+        display: flex;
+    }
+    
+    .control-btn {
+        width: 12px;
+        height: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .glass-terminal {
+        height: 95vh;
+        margin: 0;
+        border-radius: 8px;
+    }
+    
+    .terminal-header {
+        padding: 12px 15px;
+    }
+    
+    .terminal-title {
+        font-size: 1rem;
+    }
+    
+    .terminal-content {
+        padding: 15px 10px;
+    }
+    
+    .line {
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    
+    .loading-text {
+        font-size: 1rem;
+        letter-spacing: 2px;
+    }
+    
+    .loader-container {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* TOUCH OPTIMIZATSIYA */
+@media (hover: none) and (pointer: coarse) {
+    .control-btn:hover {
+        transform: none;
+    }
+    
+    .line {
+        padding-left: 8px;
+    }
+    
+    .terminal-content {
+        -webkit-overflow-scrolling: touch;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING EKRANI -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loader-container">
+        <div class="loader"></div>
+        <div class="inner-loader"></div>
+    </div>
+    <div class="loading-text">XOLERIC<span class="loading-dots" id="loadingDots"></span></div>
+    <div class="loading-progress">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+</div>
+
+<!-- MATRIX KANVASLAR -->
+<canvas id="matrix1" class="matrix-canvas"></canvas>
+<canvas id="matrix2" class="matrix-canvas"></canvas>
+<canvas id="matrix3" class="matrix-canvas"></canvas>
+
+<!-- RAIN EFFECT -->
+<div class="rain-container" id="rainEffect"></div>
+
+<!-- GLASS TERMINAL -->
+<div class="glass-container">
+    <div class="glass-terminal" id="glassTerminal">
+        <div class="terminal-header">
+            <div class="terminal-title">
+                <i class="fas fa-terminal"></i> XOLERIC/INFO
+            </div>
+            <div class="terminal-controls">
+                <div class="control-btn close-btn" id="closeBtn"></div>
+                <div class="control-btn minimize-btn" id="minimizeBtn"></div>
+                <div class="control-btn maximize-btn" id="maximizeBtn"></div>
+            </div>
+        </div>
+        
+        <div class="terminal-content" id="terminalContent">
+            <!-- Terminal matni bu yerga yoziladi -->
+        </div>
+        
+        <div class="terminal-footer">
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>ENCRYPTED CONNECTION ACTIVE</span>
+            </div>
+            <div class="system-info">
+                <div class="info-item">
+                    <i class="fas fa-user-secret"></i>
+                    <span>USER: XOLERIC</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>MODE: STEALTH</span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-bolt"></i>
+                    <span>POWER: 100%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MOBILE CONTROLS -->
+<div class="mobile-controls">
+    <div class="mobile-btn" id="mobileMenuBtn">
+        <i class="fas fa-bars"></i>
+    </div>
+    <div class="mobile-btn" id="mobileCommandBtn">
+        <i class="fas fa-terminal"></i>
+    </div>
+    <div class="mobile-btn" id="mobileScrollBtn">
+        <i class="fas fa-arrow-down"></i>
+    </div>
+</div>
+
+<div class="command-input" id="commandInput">
+    <input type="text" placeholder="Enter command..." id="commandField">
+</div>
+
+<!-- AUDIO ELEMENTS -->
+<audio id="typeSound" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-fast-typing-154.mp3" type="audio/mpeg">
+</audio>
+<audio id="clickSound" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-select-click-1109.mp3" type="audio/mpeg">
+</audio>
+<audio id="startupSound" preload="auto">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-computer-start-up-569.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// AUDIO FUNCTIONS
+function playSound(soundId) {
+    if (typeof Audio !== 'undefined') {
+        try {
+            const sound = document.getElementById(soundId);
+            if (sound) {
+                sound.currentTime = 0;
+                sound.play().catch(e => console.log("Audio play failed:", e));
+            }
+        } catch (e) {
+            console.log("Audio error:", e);
+        }
+    }
+}
+
+// LOADING FUNCTIONS
+function startLoading() {
+    const loadingScreen = document.getElementById('loadingScreen');
+    const loadingDots = document.getElementById('loadingDots');
+    const progressBar = document.getElementById('progressBar');
+    
+    // Vibration effect
+    if (navigator.vibrate) {
+        navigator.vibrate([100, 50, 100, 50, 100, 50, 200]);
+    }
+    
+    // Play startup sound
+    setTimeout(() => playSound('startupSound'), 500);
+    
+    // Animate loading dots
+    let dotCount = 0;
+    const dotsInterval = setInterval(() => {
+        dotCount = (dotCount + 1) % 4;
+        loadingDots.textContent = '.'.repeat(dotCount);
+    }, 500);
+    
+    // Animate progress bar
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 10;
+        if (progress > 100) progress = 100;
+        progressBar.style.width = `${progress}%`;
+        
+        if (progress >= 100) {
+            clearInterval(progressInterval);
+            clearInterval(dotsInterval);
+            
+            // Finish loading
+            setTimeout(() => {
+                loadingScreen.classList.add('fade-out');
+                
+                setTimeout(() => {
+                    loadingScreen.style.display = 'none';
+                    initMatrix();
+                    createRainEffect();
+                    typeLines(lines);
+                    document.getElementById('glassTerminal').classList.add('active');
+                    
+                    // Mobile detection
+                    if ('ontouchstart' in window || navigator.maxTouchPoints) {
+                        document.querySelector('.mobile-controls').style.display = 'flex';
+                    }
+                }, 800);
+            }, 500);
+        }
+    }, 150);
+}
+
+// RAIN EFFECT
+function createRainEffect() {
+    const rainContainer = document.getElementById('rainEffect');
+    const rainCount = window.innerWidth < 768 ? 25 : 50;
+    
+    for (let i = 0; i < rainCount; i++) {
+        const rainLine = document.createElement('div');
+        rainLine.classList.add('rain-line');
+        
+        // Random properties
+        const leftPos = Math.random() * 100;
+        const height = 50 + Math.random() * 150;
+        const animationDelay = Math.random() * 8;
+        const animationDuration = 1.5 + Math.random() * 2.5;
+        const opacity = 0.3 + Math.random() * 0.5;
+        
+        // Apply styles
+        rainLine.style.left = `${leftPos}%`;
+        rainLine.style.height = `${height}px`;
+        rainLine.style.opacity = opacity;
+        rainLine.style.animation = `rainFall ${animationDuration}s linear ${animationDelay}s infinite`;
+        
+        // Random color
+        const colors = ['#00FF00', '#00FFFF', '#00FF80', '#80FF00'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        rainLine.style.background = `linear-gradient(to bottom, transparent, ${color}, ${color}, transparent)`;
+        
+        rainContainer.appendChild(rainLine);
+    }
+}
+
+// MATRIX EFFECT
+function initMatrix() {
+    const canvas1 = document.getElementById('matrix1');
+    const canvas2 = document.getElementById('matrix2');
+    const canvas3 = document.getElementById('matrix3');
+    const ctx1 = canvas1.getContext('2d');
+    const ctx2 = canvas2.getContext('2d');
+    const ctx3 = canvas3.getContext('2d');
+
+    function resize() {
+        canvas1.width = window.innerWidth;
+        canvas1.height = window.innerHeight;
+        canvas2.width = window.innerWidth;
+        canvas2.height = window.innerHeight;
+        canvas3.width = window.innerWidth;
+        canvas3.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const chars = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$+-*/=%\"'#&_(),.;:?!\\|{}<>[]^~".split("");
+
+    // Layer 1 - Fast matrix
+    const columns1 = Math.floor(canvas1.width / 16);
+    const drops1 = [];
+    for (let i = 0; i < columns1; i++) drops1[i] = Math.floor(Math.random() * -100);
+
+    // Layer 2 - Medium matrix
+    const columns2 = Math.floor(canvas2.width / 20);
+    const drops2 = [];
+    for (let i = 0; i < columns2; i++) drops2[i] = Math.floor(Math.random() * -100);
+
+    // Layer 3 - Slow matrix
+    const columns3 = Math.floor(canvas3.width / 24);
+    const drops3 = [];
+    for (let i = 0; i < columns3; i++) drops3[i] = Math.floor(Math.random() * -100);
+
+    function draw1() {
+        ctx1.fillStyle = "rgba(0, 255, 0, 0.08)";
+        ctx1.font = "16px 'Share Tech Mono'";
+        for (let i = 0; i < drops1.length; i++) {
+            let t = chars[Math.floor(Math.random() * chars.length)];
+            ctx1.fillText(t, i * 16, drops1[i] * 16);
+            drops1[i] += 1.5;
+            if (drops1[i] * 16 > canvas1.height && Math.random() > 0.97) drops1[i] = 0;
+        }
+    }
+
+    function draw2() {
+        ctx2.fillStyle = "rgba(0, 255, 100, 0.12)";
+        ctx2.font = "20px 'Share Tech Mono'";
+        ctx2.shadowColor = "#0F0";
+        ctx2.shadowBlur = 10;
+        for (let i = 0; i < drops2.length; i++) {
+            let t = chars[Math.floor(Math.random() * chars.length)];
+            ctx2.fillText(t, i * 20, drops2[i] * 20);
+            drops2[i] += 1;
+            if (drops2[i] * 20 > canvas2.height && Math.random() > 0.98) drops2[i] = 0;
+        }
+        ctx2.shadowBlur = 0;
+    }
+
+    function draw3() {
+        ctx3.fillStyle = "rgba(100, 255, 200, 0.05)";
+        ctx3.font = "24px 'Share Tech Mono'";
+        for (let i = 0; i < drops3.length; i++) {
+            let t = chars[Math.floor(Math.random() * chars.length)];
+            ctx3.fillText(t, i * 24, drops3[i] * 24);
+            drops3[i] += 0.5;
+            if (drops3[i] * 24 > canvas3.height && Math.random() > 0.99) drops3[i] = 0;
+        }
+    }
+
+    function animate() {
+        // Clear with transparency for trailing effect
+        ctx1.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
+        
+        ctx2.fillStyle = 'rgba(0, 0, 0, 0.03)';
+        ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+        
+        ctx3.fillStyle = 'rgba(0, 0, 0, 0.02)';
+        ctx3.fillRect(0, 0, canvas3.width, canvas3.height);
+        
+        draw1();
+        draw2();
+        draw3();
+        requestAnimationFrame(animate);
+    }
+    animate();
+}
+
+// TERMINAL CONTENT
+const terminalContent = document.getElementById('terminalContent');
+
+const lines = [
+    "<span class='rainbow-text'>XOLERIC INFO</span>",
+    "════════════════════════════════════",
+    "SYSTEM  COMPLETE. ALL SYSTEMS OPERATIONAL.",
+    "",
+    "<span class='highlight'>USER PROFILE LOADED:</span>",
+    "══════════════════════",
+    "IDENTITY: <span class='highlight'>XOLERIC</span>",
+    "STATUS: <span class='highlight'>ACTIVE</span>",
+    "SECURITY LEVEL: <span class='important'>MAXIMUM</span>",
+    "LOCATION: <span class='highlight'>ENCRYPTED</span>",
+    "LAST ACCESS: <span class='highlight'>CURRENT SESSION</span>",
+    "",
+    "<span class='highlight'>CORE COMPETENCIES:</span>",
+    "═══════════════════",
+    "<span class='command'>></span> Penetration testing & ethical hacking",
+    "<span class='command'>></span> Cryptography & encryption systems",
+    "<span class='command'>></span> Network security & digital forensics",
+    "<span class='command'>></span> Reverse engineering & malware analysis",
+    "<span class='command'>></span> Secure system architecture design",
+    "<span class='command'>></span> Blockchain & decentralized systems",
+    "<span class='command'>></span> AI security & adversarial machine learning",
+    "<span class='command'>></span> Quantum computing & post-quantum cryptography",
+    "",
+    "<span class='highlight'>ACTIVE PROJECTS:</span>",
+    "══════════════════",
+    "<span class='command'>></span> Quantum-resistant encryption algorithms",
+    "<span class='command'>></span> Decentralized autonomous security protocol",
+    "<span class='command'>></span> Neural network threat detection system",
+    "<span class='command'>></span> Zero-knowledge proof authentication",
+    "<span class='command'>></span> Homomorphic encryption framework",
+    "",
+    "<span class='highlight'>SYSTEM STATISTICS:</span>",
+    "═══════════════════",
+    "<span class='command'>></span> Uptime: 100% (347 days, 12:45:23)",
+    "<span class='command'>></span> Security breaches: 0",
+    "<span class='command'>></span> Encryption: 256-bit end-to-end",
+    "<span class='command'>></span> Data processed: 47.3 PB",
+    "<span class='command'>></span> Network nodes: 1,247 active",
+    "",
+    "<span class='highlight'>AVAILABLE COMMANDS:</span>",
+    "═══════════════════",
+    "<span class='command'>help</span> - Display available commands",
+    "<span class='command'>clear</span> - Clear terminal screen",
+    "<span class='command'>sysinfo</span> - Display system information",
+    "<span class='command'>projects</span> - Show active projects",
+    "<span class='command'>contact</span> - Display contact information",
+    "<span class='command'>encrypt</span> - Start encryption protocol",
+    "",
+    "<span class='important'>TERMINAL READY. AWAITING COMMANDS...</span>",
+    "",
+    "<span style='color:#888'>© 2026 XOLERIC SYSTEMS. All rights reserved.</span>"
+];
+
+let isTyping = false;
+let currentLine = 0;
+
+function typeLines(lines, index = 0) {
+    if (index >= lines.length) {
+        isTyping = false;
+        // Add blinking cursor at the end
+        const cursor = document.createElement('span');
+        cursor.classList.add('cursor');
+        cursor.id = 'terminalCursor';
+        terminalContent.appendChild(cursor);
+        
+        // Scroll to bottom
+        terminalContent.scrollTop = terminalContent.scrollHeight;
+        
+        // Add command prompt
+        setTimeout(() => {
+            const promptLine = document.createElement('div');
+            promptLine.classList.add('line');
+            promptLine.style.opacity = '1';
+            promptLine.innerHTML = "<span class='command'>root@xoleric:~#</span> ";
+            terminalContent.appendChild(promptLine);
+            
+            // Move cursor after prompt
+            cursor.remove();
+            promptLine.appendChild(cursor);
+            
+            terminalContent.scrollTop = terminalContent.scrollHeight;
+        }, 300);
+        
+        return;
+    }
+    
+    isTyping = true;
+    currentLine = index;
+    
+    const lineElem = document.createElement('div');
+    lineElem.classList.add('line');
+    terminalContent.appendChild(lineElem);
+    
+    const text = lines[index];
+    let charIndex = 0;
+
+    function typeChar() {
+        if (charIndex < text.length) {
+            // Play typing sound randomly
+            if (Math.random() > 0.7) {
+                playSound('typeSound');
+            }
+            
+            // Handle HTML tags
+            if (text[charIndex] === '<' && text.substring(charIndex).includes('>')) {
+                const tagEnd = text.indexOf('>', charIndex);
+                const htmlSegment = text.substring(charIndex, tagEnd + 1);
+                lineElem.innerHTML += htmlSegment;
+                charIndex = tagEnd + 1;
+            } else {
+                lineElem.textContent += text[charIndex];
+                charIndex++;
+            }
+            
+            // Random typing speed for natural feel
+            setTimeout(typeChar, 20 + Math.random() * 30);
+        } else {
+            // Move to next line
+            setTimeout(() => {
+                typeLines(lines, index + 1);
+                terminalContent.scrollTop = terminalContent.scrollHeight;
+            }, 100);
+        }
+    }
+    
+    lineElem.style.opacity = '1';
+    typeChar();
+}
+
+// COMMAND HANDLING
+function handleCommand(command) {
+    playSound('clickSound');
+    
+    const promptLine = document.createElement('div');
+    promptLine.classList.add('line');
+    promptLine.style.opacity = '1';
+    promptLine.innerHTML = `<span class='command'>root@xoleric:~#</span> ${command}`;
+    terminalContent.appendChild(promptLine);
+    
+    // Remove current cursor
+    const cursor = document.getElementById('terminalCursor');
+    if (cursor) cursor.remove();
+    
+    // Process command
+    setTimeout(() => {
+        let response = '';
+        
+        switch(command.toLowerCase()) {
+            case 'help':
+                response = `Available commands: help, clear, sysinfo, projects, contact, encrypt, about, status`;
+                break;
+            case 'clear':
+                terminalContent.innerHTML = '';
+                const newCursor = document.createElement('span');
+                newCursor.classList.add('cursor');
+                newCursor.id = 'terminalCursor';
+                terminalContent.appendChild(newCursor);
+                return;
+            case 'sysinfo':
+                response = `System: XOLERIC<br>OS: Custom Linux Kernel 6.8.0<br>CPU: Quantum Processor Q-256<br>RAM: 128 TB ECC<br>Storage: 10 EB SSD Array<br>Network: Encrypted TOR + I2P`;
+                break;
+            case 'projects':
+                response = `Active Projects:<br>1. Quantum Encryption Suite<br>2. Decentralized Security Network<br>3. AI Threat Detection System<br>4. Zero-Knowledge Authentication<br>5. Homomorphic Computing Framework`;
+                break;
+            case 'contact':
+                response = `Contact: [ENCRYPTED]<br>Signal: Secure Channel #XLR-887<br>Email: x@protonmail.ch<br>PGP: 0x8F3A2B1C9D5E7F0A`;
+                break;
+            case 'encrypt':
+                response = `<span class='important'>INITIATING ENCRYPTION PROTOCOL...</span><br>Generating 4096-bit RSA keys...<br>Establishing quantum-safe channel...<br>Connection secured with perfect forward secrecy.`;
+                break;
+            case 'about':
+                response = `XOLERIC - Advanced security researcher & developer.<br>Specializing in cutting-edge cybersecurity solutions,<br>cryptography, and decentralized systems.`;
+                break;
+            case 'status':
+                response = `Status: OPERATIONAL<br>Security: MAXIMUM<br>Uptime: 100%<br>Threat Level: LOW<br>Connected Nodes: 1,247`;
+                break;
+            default:
+                response = `Command not found: ${command}<br>Type 'help' for available commands.`;
+        }
+        
+        const responseLine = document.createElement('div');
+        responseLine.classList.add('line');
+        responseLine.style.opacity = '1';
+        responseLine.innerHTML = response;
+        terminalContent.appendChild(responseLine);
+        
+        // Add new prompt with cursor
+        const newPrompt = document.createElement('div');
+        newPrompt.classList.add('line');
+        newPrompt.style.opacity = '1';
+        newPrompt.innerHTML = `<span class='command'>root@xoleric:~#</span> `;
+        terminalContent.appendChild(newPrompt);
+        
+        const newCursor = document.createElement('span');
+        newCursor.classList.add('cursor');
+        newCursor.id = 'terminalCursor';
+        newPrompt.appendChild(newCursor);
+        
+        terminalContent.scrollTop = terminalContent.scrollHeight;
+    }, 500);
+}
+
+// EVENT LISTENERS
+document.addEventListener('DOMContentLoaded', () => {
+    startLoading();
+    
+    // Terminal controls
+    document.getElementById('closeBtn').addEventListener('click', function() {
+        playSound('clickSound');
+        if (navigator.vibrate) navigator.vibrate(100);
+        document.body.innerHTML = `
+            <div style="
+                color:#0f0;
+                font-family:'Share Tech Mono';
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+                align-items:center;
+                height:100vh;
+                background:#000;
+                text-align:center;
+                padding:20px;
+            ">
+                <div style="font-size:2rem;margin-bottom:20px;text-shadow:0 0 10px #0f0;">
+                    <i class="fas fa-power-off"></i>
+                </div>
+                <div style="font-size:1.5rem;margin-bottom:10px;">
+                    TERMINAL DISCONNECTED
+                </div>
+                <div style="color:#888;font-size:0.9rem;">
+                    Secure connection terminated<br>
+                    Refresh page to reconnect
+                </div>
+            </div>
+        `;
+    });
+    
+    document.getElementById('minimizeBtn').addEventListener('click', function() {
+        playSound('clickSound');
+        if (navigator.vibrate) navigator.vibrate(50);
+        const terminal = document.getElementById('glassTerminal');
+        terminal.style.transform = terminal.style.transform ? '' : 'scale(0.8)';
+        terminal.style.opacity = terminal.style.opacity === '0.5' ? '1' : '0.5';
+    });
+    
+    document.getElementById('maximizeBtn').addEventListener('click', function() {
+        playSound('clickSound');
+        if (navigator.vibrate) navigator.vibrate(50);
+        const terminal = document.getElementById('glassTerminal');
+        if (terminal.style.width === '100%' && terminal.style.height === '100vh') {
+            terminal.style.width = '';
+            terminal.style.height = '88vh';
+            terminal.style.borderRadius = '16px';
+        } else {
+            terminal.style.width = '100%';
+            terminal.style.height = '100vh';
+            terminal.style.borderRadius = '0';
+        }
+    });
+    
+    // Mobile controls
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        playSound('clickSound');
+        alert('Mobile menu - Coming soon in v3.1');
+    });
+    
+    document.getElementById('mobileCommandBtn').addEventListener('click', function() {
+        playSound('clickSound');
+        const input = document.getElementById('commandInput');
+        input.style.display = input.style.display === 'block' ? 'none' : 'block';
+        if (input.style.display === 'block') {
+            document.getElementById('commandField').focus();
+        }
+    });
+    
+    document.getElementById('mobileScrollBtn').addEventListener('click', function() {
+        playSound('clickSound');
+        terminalContent.scrollTop = terminalContent.scrollHeight;
+    });
+    
+    // Command input
+    const commandField = document.getElementById('commandField');
+    commandField.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            const command = commandField.value.trim();
+            if (command) {
+                handleCommand(command);
+                commandField.value = '';
+            }
+            document.getElementById('commandInput').style.display = 'none';
+        }
+    });
+    
+    // Touch interactions for terminal
+    let touchStartY = 0;
+    let touchStartX = 0;
+    
+    terminalContent.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+        touchStartX = e.touches[0].clientX;
+        e.preventDefault();
+    }, { passive: false });
+    
+    terminalContent.addEventListener('touchmove', function(e) {
+        // Allow natural scrolling
+        e.preventDefault();
+    }, { passive: false });
+    
+    terminalContent.addEventListener('touchend', function(e) {
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchEndX = e.changedTouches[0].clientX;
+        
+        // Detect swipe up/down for special actions
+        const deltaY = touchEndY - touchStartY;
+        const deltaX = touchEndX - touchStartX;
+        
+        if (Math.abs(deltaY) > 50 && Math.abs(deltaX) < 30) {
+            if (deltaY > 0) {
+                // Swipe down - scroll to top
+                terminalContent.scrollTop = 0;
+            } else {
+                // Swipe up - scroll to bottom
+                terminalContent.scrollTop = terminalContent.scrollHeight;
+            }
+        }
+    });
+    
+    // Double tap to focus command input on mobile
+    let lastTap = 0;
+    terminalContent.addEventListener('touchend', function(e) {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        
+        if (tapLength < 300 && tapLength > 0) {
+            // Double tap detected
+            document.getElementById('commandInput').style.display = 'block';
+            document.getElementById('commandField').focus();
+            playSound('clickSound');
+        }
+        
+        lastTap = currentTime;
+    });
+});
+</script>
+
+</body>
+</html>
